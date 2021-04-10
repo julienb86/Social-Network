@@ -18,7 +18,7 @@ export const CreateUser = async (user: IUser, callback: any) => {
             }
         )
     } catch (error) {
-        throw new error("impossible to create user")
+        throw new Error(error)
     }
 }
 
@@ -48,6 +48,6 @@ export const FindOne = (user: IUser, callback: any) => {
             }
         )
     } catch (error) {
-        throw new error("impossible to get user")
+        throw new Error(error)
     }
 }

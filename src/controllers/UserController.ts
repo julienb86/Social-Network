@@ -26,7 +26,7 @@ export const Login = async (req: Request, res: Response) => {
     try {
         if (req.body !== null) {
             const user: IUser = req.body;
-            await userModel.FindOne(user, (error: any, result: any) => {
+            await userModel.FindOne(user, (error: Error, result: any) => {
                 if (result) {
                     return res.status(200).json({ result });
                 } else {
