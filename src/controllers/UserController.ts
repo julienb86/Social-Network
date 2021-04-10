@@ -34,10 +34,10 @@ export const Login = async (req: Request, res: Response) => {
                 }
             });
         } else {
-            return res.sendStatus(500).json({ "message": "Please fill in the form*" });
+            return res.status(500).json({ "message": "Please fill in the form*" });
         }
     } catch (error) {
-        return res.sendStatus(500).json(error);
+        return res.status(500).json(error);
     }
 }
 
