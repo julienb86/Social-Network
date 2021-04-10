@@ -8,10 +8,9 @@ import { generateToken } from "../../middleware/auth";
 export const CreateUser = async (user: IUser, callback: any) => {
     try {
         const password = await encrypt(user.password);
-        const query: string = `INSERT INTO users (email, password) VALUES (?, ?)`;
+        const query: string = `INSERT INTO users (email, password, photo, fileName) VALUES ('${user.email}', '${password}', '${user.photo}', '${user.fileName}')`;
         db.query<OkPacket>(
             query,
-            [user.email, password],
             (err: Query.QueryError, result: OkPacket) => {
                 if (err) { callback(err) }
                 const insertId: number = (result as OkPacket).insertId
@@ -25,23 +24,26 @@ export const CreateUser = async (user: IUser, callback: any) => {
 
 export const FindOne = (user: IUser, callback: any) => {
     try {
-        const query: string = "SELECT * FROM users WHERE email = ?";
+        const query: string = `SELECT * FROM users WHERE email = '${user.email}'`;
         let result: IUser;
         db.query(
             query,
-            [user.email],
             async (err: Query.QueryError, results: RowDataPacket[]) => {
                 if (err) { callback(err) }
-                const match: boolean = await decrypt(user.password, results[0].password);
-                if (match) {
-                    const token: string = await generateToken(user);
-                    result = {
-                        email: results[0].email,
-                        token
+                if (results[0]) {
+                    const match: boolean = await decrypt(user.password, results[0].password);
+                    if (match) {
+                        const token: string = await generateToken(user);
+                        result = {
+                            email: results[0].email,
+                            token
+                        }
+                        callback(null, result)
+                    } else {
+                        callback({ "message": "Password or email does not match" })
                     }
-                    callback(result)
                 } else {
-                    callback(null)
+                    callback({ "message": "User not found" })
                 }
             }
         )
