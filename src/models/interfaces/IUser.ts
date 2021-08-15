@@ -1,11 +1,12 @@
+
 export interface IUser {
-    id?: number,
+    id?: string,
     email: string,
     password?: string,
     photo?: string,
     fileName?: string,
     token?: string,
-    isAdmin?: boolean,
+    role?: number,
     createdAt?: Date,
     deletedAt?: Date | null
 }

@@ -8,13 +8,12 @@ import { generateToken } from "../../middleware/auth";
 export const CreateUser = async (user: IUser, callback: any) => {
     try {
         const password = await encrypt(user.password);
-        const query: string = `INSERT INTO users (email, password, photo, fileName) VALUES ('${user.email}', '${password}', '${user.photo}', '${user.fileName}')`;
+        const query: string = `INSERT INTO users (email, password, photo, fileName, role) VALUES ('${user.email}', '${password}', '${user.photo}', '${user.fileName}', '${user.role}')`;
         db.query<OkPacket>(
             query,
             (err: Query.QueryError, result: OkPacket) => {
                 if (err) { callback(err) }
-                const insertId: number = (result as OkPacket).insertId
-                callback(null, insertId);
+                callback(null, result.insertId);
             }
         )
     } catch (error) {
@@ -51,3 +50,4 @@ export const FindOne = (user: IUser, callback: any) => {
         throw new Error(error)
     }
 }
+
